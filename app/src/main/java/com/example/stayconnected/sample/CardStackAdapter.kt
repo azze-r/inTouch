@@ -1,14 +1,17 @@
 package com.example.stayconnected.sample
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.stayconnected.R
+import java.util.*
 
 class CardStackAdapter(
         private var spots: List<Spot> = emptyList()
@@ -20,8 +23,11 @@ class CardStackAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val rnd = Random()
+        val color: Int = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+        holder.card.setCardBackgroundColor(color)
         val spot = spots[position]
-        holder.name.text = "${spot.id}. ${spot.name}"
+        holder.name.text = "${spot.name}"
         holder.city.text = spot.city
         Glide.with(holder.image)
                 .load(spot.url)
@@ -47,6 +53,8 @@ class CardStackAdapter(
         val name: TextView = view.findViewById(R.id.item_name)
         var city: TextView = view.findViewById(R.id.item_city)
         var image: ImageView = view.findViewById(R.id.item_image)
+        var card: CardView = view.findViewById(R.id.card)
+
     }
 
 }
