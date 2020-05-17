@@ -1,6 +1,7 @@
 package com.example.stayconnected.sample
 
 import android.Manifest.permission
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,7 +11,6 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.stayconnected.R
 import com.google.android.material.snackbar.Snackbar
 import com.yuyakaido.android.cardstackview.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), CardStackListener {
 
@@ -40,9 +42,65 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         getContact(this.cardStackView)
         manager = CardStackLayoutManager(this, this)
 
-        subContacts.add(allContacts[(0 until allContacts.count()).random()])
-        subContacts.add(allContacts[(0 until allContacts.count()).random()])
-        subContacts.add(allContacts[(0 until allContacts.count()).random()])
+
+
+
+
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        val savedTime = sharedPref.getInt("date", 0)
+
+        val cal1: Calendar = Calendar.getInstance()
+        val cal2: Calendar = Calendar.getInstance()
+
+        cal1.time = cal1.time
+
+        if (savedTime == 0){
+            cal2.time = cal2.time
+
+            with (sharedPref.edit()) {
+                putInt("date", cal2.time.time.toInt())
+                commit()
+            }
+
+            Log.i("wtf","saved new date, generate new randoms contacts")
+
+            subContacts.add(allContacts[(0 until allContacts.count()).random()])
+            subContacts.add(allContacts[(0 until allContacts.count()).random()])
+            subContacts.add(allContacts[(0 until allContacts.count()).random()])
+
+        }
+        else{
+
+            Log.i("wtf","already a saved date"+ savedTime.toLong())
+            cal2.time = Date(savedTime.toLong())
+
+            val sameDay =
+                cal1.get(Calendar.DAY_OF_YEAR) === cal2.get(Calendar.DAY_OF_YEAR) &&
+                        cal1.get(Calendar.YEAR) === cal2.get(Calendar.YEAR)
+
+            if (sameDay){
+
+                Log.i("wtf","same day retrieve saved contacts")
+
+                subContacts.add(allContacts[0])
+                subContacts.add(allContacts[1])
+                subContacts.add(allContacts[2])
+            }
+            else{
+
+                Log.i("wtf","not same day add new random contacts")
+
+                subContacts.add(allContacts[(0 until allContacts.count()).random()])
+                subContacts.add(allContacts[(0 until allContacts.count()).random()])
+                subContacts.add(allContacts[(0 until allContacts.count()).random()])
+
+                with (sharedPref.edit()) {
+                    putInt("date", cal2.time.time.toInt())
+                    commit()
+                }
+            }
+        }
+
 
         adapter = CardStackAdapter(createSpots())
         setupCardStackView()
@@ -113,7 +171,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         val rewind = findViewById<View>(R.id.rewind_button)
         rewind.setOnClickListener {
-
+            /*
             val setting = RewindAnimationSetting.Builder()
                     .setDirection(Direction.Bottom)
                     .setDuration(Duration.Normal.duration)
@@ -121,7 +179,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                     .build()
             manager!!.setRewindAnimationSetting(setting)
             cardStackView.rewind()
-
+            */
         }
 
         val like = findViewById<View>(R.id.like_button)
