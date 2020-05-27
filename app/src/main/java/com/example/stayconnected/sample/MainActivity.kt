@@ -43,68 +43,113 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         manager = CardStackLayoutManager(this, this)
 
 
-
-
-
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
-        val savedTime = sharedPref.getInt("date", 0)
+        val savedTime = sharedPref.getString("date", "").toString()
 
-        val cal1: Calendar = Calendar.getInstance()
-        val cal2: Calendar = Calendar.getInstance()
+        val currentCal: Calendar = Calendar.getInstance()
 
-        cal1.time = cal1.time
-
-        if (savedTime == 0){
-            cal2.time = cal2.time
+        if (savedTime.isEmpty()){
 
             with (sharedPref.edit()) {
-                putInt("date", cal2.time.time.toInt())
+                putString("date", currentCal.timeInMillis.toString())
                 commit()
             }
 
-            Log.i("wtf","saved new date, generate new randoms contacts")
+            Log.i("wtf","no date saved so save new date, generate new randoms contacts")
 
-            subContacts.add(allContacts[(0 until allContacts.count()).random()])
-            subContacts.add(allContacts[(0 until allContacts.count()).random()])
-            subContacts.add(allContacts[(0 until allContacts.count()).random()])
+            val contact1 = allContacts[(0 until allContacts.count()).random()]
+            val contact2 = allContacts[(0 until allContacts.count()).random()]
+            val contact3 = allContacts[(0 until allContacts.count()).random()]
+
+            with (sharedPref.edit()) {
+                putString("id1", contact1.id.toString())
+                putString("id2", contact2.id.toString())
+                putString("id3", contact3.id.toString())
+                commit()
+            }
+
+            subContacts.add(contact1)
+            subContacts.add(contact2)
+            subContacts.add(contact3)
 
         }
+
         else{
 
-            Log.i("wtf","already a saved date"+ savedTime.toLong())
-            cal2.time = Date(savedTime.toLong())
+            Log.i("wtf","already a saved date "+ savedTime.toLong())
 
-            val sameDay =
-                cal1.get(Calendar.DAY_OF_YEAR) === cal2.get(Calendar.DAY_OF_YEAR) &&
-                        cal1.get(Calendar.YEAR) === cal2.get(Calendar.YEAR)
+            val savedCal : Calendar = Calendar.getInstance()
 
-            if (sameDay){
+            savedCal.time = Date(savedTime.toLong())
+
+            if (checkIfSameDay(currentCal,savedCal)){
 
                 Log.i("wtf","same day retrieve saved contacts")
 
-                subContacts.add(allContacts[0])
-                subContacts.add(allContacts[1])
-                subContacts.add(allContacts[2])
+                val id1 = sharedPref.getString("id1", "").toString()
+                val id2 = sharedPref.getString("id2", "").toString()
+                val id3 = sharedPref.getString("id3", "").toString()
+
+                Log.i("wtf","ids $id1 $id2 $id3")
+
+                if (id1 != ""){
+                    for (contact in allContacts){
+                        if (contact.id.toString() == id1) {
+                            subContacts.add(contact)
+                        }
+                    }
+                }
+
+                if (id2 != ""){
+                    for (contact in allContacts){
+                        if (contact.id.toString() == id2)
+                            subContacts.add(contact)
+                    }
+                }
+
+                if (id3 != ""){
+                    for (contact in allContacts){
+                        if (contact.id.toString() == id3)
+                            subContacts.add(contact)
+                    }
+                }
+
             }
+
             else{
 
                 Log.i("wtf","not same day add new random contacts")
 
-                subContacts.add(allContacts[(0 until allContacts.count()).random()])
-                subContacts.add(allContacts[(0 until allContacts.count()).random()])
-                subContacts.add(allContacts[(0 until allContacts.count()).random()])
+                val contact1 = allContacts[(0 until allContacts.count()).random()]
+                val contact2 = allContacts[(0 until allContacts.count()).random()]
+                val contact3 = allContacts[(0 until allContacts.count()).random()]
 
                 with (sharedPref.edit()) {
-                    putInt("date", cal2.time.time.toInt())
+                    putString("id1", contact1.id.toString())
+                    putString("id2", contact2.id.toString())
+                    putString("id3", contact3.id.toString())
+                    commit()
+                }
+
+                subContacts.add(contact1)
+                subContacts.add(contact2)
+                subContacts.add(contact3)
+
+                with (sharedPref.edit()) {
+                    putString("date", currentCal.timeInMillis.toString())
                     commit()
                 }
             }
         }
 
-
         adapter = CardStackAdapter(createSpots())
         setupCardStackView()
         setupButton()
+    }
+
+    fun checkIfSameDay(cal1:Calendar, cal2:Calendar):Boolean{
+        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
     }
 
     override fun onBackPressed() {
@@ -133,6 +178,54 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         if (manager!!.topPosition == adapter!!.itemCount - 5) {
             paginate()
         }
+
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+
+        val arrayIds = ArrayList<String>()
+
+        val id1 = sharedPref.getString("id1", "").toString()
+        val id2 = sharedPref.getString("id2", "").toString()
+        val id3 = sharedPref.getString("id3", "").toString()
+
+        arrayIds.add(id1)
+        arrayIds.add(id2)
+        arrayIds.add(id3)
+
+        var i = 0
+
+        while (i < arrayIds.count()){
+
+            val sub = subContacts[manager!!.topPosition-1].id.toString()
+            val id = arrayIds[i].toString()
+
+            Log.i("wtf","sub id $sub $id")
+            if (sub == id) {
+                if (i == 0){
+                    with (sharedPref.edit()) {
+                        putString("id1", "")
+                        commit()
+                    }
+                }
+
+                if (i == 1){
+                    with (sharedPref.edit()) {
+                        putString("id2", "")
+                        commit()
+                    }
+                }
+
+                if (i == 2){
+                    with (sharedPref.edit()) {
+                        putString("id3", "")
+                        commit()
+                    }
+                }
+
+            }
+
+            i += 1
+
+        }
     }
 
     override fun onCardRewound() {
@@ -158,40 +251,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
     }
 
     private fun setupButton() {
-        val skip = findViewById<View>(R.id.skip_button)
-        skip.setOnClickListener {
-            val setting = SwipeAnimationSetting.Builder()
-                    .setDirection(Direction.Left)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(AccelerateInterpolator())
-                    .build()
-            manager!!.setSwipeAnimationSetting(setting)
-            cardStackView.swipe()
-        }
-
-        val rewind = findViewById<View>(R.id.rewind_button)
-        rewind.setOnClickListener {
-            /*
-            val setting = RewindAnimationSetting.Builder()
-                    .setDirection(Direction.Bottom)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(DecelerateInterpolator())
-                    .build()
-            manager!!.setRewindAnimationSetting(setting)
-            cardStackView.rewind()
-            */
-        }
-
-        val like = findViewById<View>(R.id.like_button)
-        like.setOnClickListener {
-            val setting = SwipeAnimationSetting.Builder()
-                    .setDirection(Direction.Right)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(AccelerateInterpolator())
-                    .build()
-            manager!!.setSwipeAnimationSetting(setting)
-            cardStackView.swipe()
-        }
     }
 
     private fun initialize() {
@@ -251,11 +310,16 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 val contacts: MutableList<String> =
                     ArrayList()
                 while (cursor.moveToNext()) {
-                    contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
-                    val a = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
-                    val b =cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
-                    val c =cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
-                    allContacts.add(Spot(b.toLong(),a," "," "))
+                    if (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)) != null) {
+                        contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
+                        val a =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
+                        val b =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                        val c =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
+                        allContacts.add(Spot(b.toLong(), a, " ", " "))
+                    }
                 }
                 cursor.close() // Got our data, close the cursor to save memory
 
