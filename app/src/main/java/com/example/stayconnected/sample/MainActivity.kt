@@ -59,8 +59,11 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             Log.i("wtf","no date saved so save new date, generate new randoms contacts")
 
             val contact1 = allContacts[(0 until allContacts.count()).random()]
+            allContacts.remove(contact1)
             val contact2 = allContacts[(0 until allContacts.count()).random()]
+            allContacts.remove(contact2)
             val contact3 = allContacts[(0 until allContacts.count()).random()]
+            allContacts.remove(contact3)
 
             with (sharedPref.edit()) {
                 putString("id1", contact1.id.toString())
@@ -122,8 +125,11 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 Log.i("wtf","not same day add new random contacts")
 
                 val contact1 = allContacts[(0 until allContacts.count()).random()]
+                allContacts.remove(contact1)
                 val contact2 = allContacts[(0 until allContacts.count()).random()]
+                allContacts.remove(contact2)
                 val contact3 = allContacts[(0 until allContacts.count()).random()]
+                allContacts.remove(contact3)
 
                 with (sharedPref.edit()) {
                     putString("id1", contact1.id.toString())
