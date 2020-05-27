@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.stayconnected.R
 import com.google.android.material.snackbar.Snackbar
 import com.yuyakaido.android.cardstackview.*
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -41,7 +43,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         setContentView(R.layout.activity_main)
         getContact(this.cardStackView)
         manager = CardStackLayoutManager(this, this)
-
 
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
         val savedTime = sharedPref.getString("date", "").toString()
@@ -144,7 +145,16 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         adapter = CardStackAdapter(createSpots())
         setupCardStackView()
-        setupButton()
+
+        if (subContacts.isEmpty()) {
+            drawerLayout.visibility = View.GONE
+            endView.visibility = View.VISIBLE
+        }
+        else{
+            drawerLayout.visibility = View.VISIBLE
+            endView.visibility = View.GONE
+        }
+
     }
 
     fun checkIfSameDay(cal1:Calendar, cal2:Calendar):Boolean{
@@ -183,9 +193,11 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         val arrayIds = ArrayList<String>()
 
-        val id1 = sharedPref.getString("id1", "").toString()
-        val id2 = sharedPref.getString("id2", "").toString()
-        val id3 = sharedPref.getString("id3", "").toString()
+        var id1 = sharedPref.getString("id1", "").toString()
+        var id2 = sharedPref.getString("id2", "").toString()
+        var id3 = sharedPref.getString("id3", "").toString()
+
+
 
         arrayIds.add(id1)
         arrayIds.add(id2)
@@ -193,12 +205,14 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         var i = 0
 
+
         while (i < arrayIds.count()){
 
             val sub = subContacts[manager!!.topPosition-1].id.toString()
             val id = arrayIds[i].toString()
 
             Log.i("wtf","sub id $sub $id")
+
             if (sub == id) {
                 if (i == 0){
                     with (sharedPref.edit()) {
@@ -226,6 +240,20 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             i += 1
 
         }
+
+        id1 = sharedPref.getString("id1", "").toString()
+        id2 = sharedPref.getString("id2", "").toString()
+        id3 = sharedPref.getString("id3", "").toString()
+
+
+        if (id1 == "" && id2 == "" && id3 == ""){
+            drawerLayout.visibility = View.GONE
+            endView.visibility = View.VISIBLE
+        }
+        else{
+            drawerLayout.visibility = View.VISIBLE
+            endView.visibility = View.GONE
+        }
     }
 
     override fun onCardRewound() {
@@ -250,8 +278,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         initialize()
     }
 
-    private fun setupButton() {
-    }
 
     private fun initialize() {
         manager!!.setStackFrom(StackFrom.None)
