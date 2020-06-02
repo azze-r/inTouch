@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             Log.i("wtf", "no date saved so save new date, generate new randoms contacts")
 
 
-            if (allContacts.isNotEmpty()) {
+            if (allContacts.size>=3) {
                 val contact1 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact1)
                 val contact2 = allContacts[(0 until allContacts.count()).random()]
