@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         getContact()
 
+
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
 
         Realm.init(this)
@@ -61,30 +62,34 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
             Log.i("wtf", "no date saved so save new date, generate new randoms contacts")
 
-            val contact1 = allContacts[(0 until allContacts.count()).random()]
-            allContacts.remove(contact1)
-            val contact2 = allContacts[(0 until allContacts.count()).random()]
-            allContacts.remove(contact2)
-            val contact3 = allContacts[(0 until allContacts.count()).random()]
-            allContacts.remove(contact3)
 
-            with(sharedPref.edit()) {
-                putString("id1", contact1.id.toString())
-                putString("id2", contact2.id.toString())
-                putString("id3", contact3.id.toString())
-                commit()
+            if (allContacts.isNotEmpty()) {
+                val contact1 = allContacts[(0 until allContacts.count()).random()]
+                allContacts.remove(contact1)
+                val contact2 = allContacts[(0 until allContacts.count()).random()]
+                allContacts.remove(contact2)
+                val contact3 = allContacts[(0 until allContacts.count()).random()]
+                allContacts.remove(contact3)
+
+
+                with(sharedPref.edit()) {
+                    putString("id1", contact1.id.toString())
+                    putString("id2", contact2.id.toString())
+                    putString("id3", contact3.id.toString())
+                    commit()
+                }
+
+                subContacts.add(contact1)
+                subContacts.add(contact2)
+                subContacts.add(contact3)
+
+                drawerLayout.visibility = View.VISIBLE
+                endView.visibility = View.GONE
+
+                adapter = CardStackAdapter(createSpots())
+                setupCardStackView()
+
             }
-
-            subContacts.add(contact1)
-            subContacts.add(contact2)
-            subContacts.add(contact3)
-
-            drawerLayout.visibility = View.VISIBLE
-            endView.visibility = View.GONE
-
-            adapter = CardStackAdapter(createSpots())
-            setupCardStackView()
-
 
         } else {
 
@@ -208,8 +213,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         var id1 = sharedPref.getString("id1", "").toString()
         var id2 = sharedPref.getString("id2", "").toString()
         var id3 = sharedPref.getString("id3", "").toString()
-
-
 
         arrayIds.add(id1)
         arrayIds.add(id2)
