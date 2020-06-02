@@ -3,8 +3,8 @@ package com.example.stayconnected.sample
 import androidx.recyclerview.widget.DiffUtil
 
 class SpotDiffCallback(
-    private val old: List<Spot>,
-    private val new: List<Spot>
+    private val old: List<Contact>,
+    private val aNew: List<Contact>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
@@ -12,15 +12,15 @@ class SpotDiffCallback(
     }
 
     override fun getNewListSize(): Int {
-        return new.size
+        return aNew.size
     }
 
     override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-        return old[oldPosition].id == new[newPosition].id
+        return old[oldPosition].id == aNew[newPosition].id
     }
 
     override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-        return old[oldPosition] == new[newPosition]
+        return old[oldPosition] == aNew[newPosition]
     }
 
 }

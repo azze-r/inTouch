@@ -1,28 +1,20 @@
 package com.example.stayconnected.sample
 
-import android.Manifest.permission
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.stayconnected.R
-import com.google.android.material.snackbar.Snackbar
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -34,29 +26,32 @@ class MainActivity : AppCompatActivity(), CardStackListener {
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     var manager : CardStackLayoutManager? = null
     var adapter : CardStackAdapter? = null
-    var allContacts:ArrayList<Spot> =  ArrayList()
-    var subContacts:ArrayList<Spot> =  ArrayList()
+    var allContacts:ArrayList<Contact> =  ArrayList()
+    var subContacts:ArrayList<Contact> =  ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getContact(this.cardStackView)
+
         manager = CardStackLayoutManager(this, this)
 
+        getContact()
+
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+
         val savedTime = sharedPref.getString("date", "").toString()
 
         val currentCal: Calendar = Calendar.getInstance()
 
-        if (savedTime.isEmpty()){
+        if (savedTime.isEmpty()) {
 
-            with (sharedPref.edit()) {
+            with(sharedPref.edit()) {
                 putString("date", currentCal.timeInMillis.toString())
                 commit()
             }
 
-            Log.i("wtf","no date saved so save new date, generate new randoms contacts")
+            Log.i("wtf", "no date saved so save new date, generate new randoms contacts")
 
             val contact1 = allContacts[(0 until allContacts.count()).random()]
             allContacts.remove(contact1)
@@ -65,7 +60,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             val contact3 = allContacts[(0 until allContacts.count()).random()]
             allContacts.remove(contact3)
 
-            with (sharedPref.edit()) {
+            with(sharedPref.edit()) {
                 putString("id1", contact1.id.toString())
                 putString("id2", contact2.id.toString())
                 putString("id3", contact3.id.toString())
@@ -76,53 +71,56 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             subContacts.add(contact2)
             subContacts.add(contact3)
 
-        }
+            drawerLayout.visibility = View.VISIBLE
+            endView.visibility = View.GONE
 
-        else{
+            adapter = CardStackAdapter(createSpots())
+            setupCardStackView()
 
-            Log.i("wtf","already a saved date "+ savedTime.toLong())
 
-            val savedCal : Calendar = Calendar.getInstance()
+        } else {
+
+            Log.i("wtf", "already a saved date " + savedTime.toLong())
+
+            val savedCal: Calendar = Calendar.getInstance()
 
             savedCal.time = Date(savedTime.toLong())
 
-            if (checkIfSameDay(currentCal,savedCal)){
+            if (checkIfSameDay(currentCal, savedCal)) {
 
-                Log.i("wtf","same day retrieve saved contacts")
+                Log.i("wtf", "same day retrieve saved contacts")
 
                 val id1 = sharedPref.getString("id1", "").toString()
                 val id2 = sharedPref.getString("id2", "").toString()
                 val id3 = sharedPref.getString("id3", "").toString()
 
-                Log.i("wtf","ids $id1 $id2 $id3")
+                Log.i("wtf", "ids $id1 $id2 $id3")
 
-                if (id1 != ""){
-                    for (contact in allContacts){
+                if (id1 != "") {
+                    for (contact in allContacts) {
                         if (contact.id.toString() == id1) {
                             subContacts.add(contact)
                         }
                     }
                 }
 
-                if (id2 != ""){
-                    for (contact in allContacts){
+                if (id2 != "") {
+                    for (contact in allContacts) {
                         if (contact.id.toString() == id2)
                             subContacts.add(contact)
                     }
                 }
 
-                if (id3 != ""){
-                    for (contact in allContacts){
+                if (id3 != "") {
+                    for (contact in allContacts) {
                         if (contact.id.toString() == id3)
                             subContacts.add(contact)
                     }
                 }
 
-            }
+            } else {
 
-            else{
-
-                Log.i("wtf","not same day add new random contacts")
+                Log.i("wtf", "not same day add new random contacts")
 
                 val contact1 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact1)
@@ -131,7 +129,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 val contact3 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact3)
 
-                with (sharedPref.edit()) {
+                with(sharedPref.edit()) {
                     putString("id1", contact1.id.toString())
                     putString("id2", contact2.id.toString())
                     putString("id3", contact3.id.toString())
@@ -142,23 +140,24 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 subContacts.add(contact2)
                 subContacts.add(contact3)
 
-                with (sharedPref.edit()) {
+                with(sharedPref.edit()) {
                     putString("date", currentCal.timeInMillis.toString())
                     commit()
                 }
+
             }
-        }
 
-        adapter = CardStackAdapter(createSpots())
-        setupCardStackView()
+            adapter = CardStackAdapter(createSpots())
+            setupCardStackView()
 
-        if (subContacts.isEmpty()) {
-            drawerLayout.visibility = View.GONE
-            endView.visibility = View.VISIBLE
-        }
-        else{
-            drawerLayout.visibility = View.VISIBLE
-            endView.visibility = View.GONE
+            if (subContacts.isEmpty()) {
+                drawerLayout.visibility = View.GONE
+                endView.visibility = View.VISIBLE
+            } else {
+                drawerLayout.visibility = View.VISIBLE
+                endView.visibility = View.GONE
+            }
+
         }
 
     }
@@ -315,78 +314,43 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         result.dispatchUpdatesTo(adapter!!)
     }
 
-    private fun createSpots(): List<Spot> {
+    private fun createSpots(): List<Contact> {
         return subContacts
     }
 
-    fun getContact(view: View){
-        if (ContextCompat.checkSelfPermission(
-                this@MainActivity,
-                permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED) {
-            val projection = arrayOf(
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY
-            )
+    fun getContact() {
 
-            val contentResolver = contentResolver
-            val cursor = contentResolver.query(
-                ContactsContract.Contacts.CONTENT_URI,
-                projection,  // List of columns to retrieve
-                null,  // A filter of which rows to return (eg. SQL WHERE), null so get all
-                null,  // Selection args, param binding
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-            ) // Sort order
-            if (cursor != null) { // No guarantee the resolver will return data, must sanity check
-                val contacts: MutableList<String> =
-                    ArrayList()
-                while (cursor.moveToNext()) {
-                    if (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)) != null) {
-                        contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
-                        val a =
-                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
-                        val b =
-                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
-                        val c =
-                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
-                        allContacts.add(Spot(b.toLong(), a, " ", " "))
-                    }
+        val projection = arrayOf(
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY
+        )
+
+        val contentResolver = contentResolver
+        val cursor = contentResolver.query(
+            ContactsContract.Contacts.CONTENT_URI,
+            projection,  // List of columns to retrieve
+            null,  // A filter of which rows to return (eg. SQL WHERE), null so get all
+            null,  // Selection args, param binding
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+        ) // Sort order
+        if (cursor != null) { // No guarantee the resolver will return data, must sanity check
+            val contacts: MutableList<String> =
+                ArrayList()
+            while (cursor.moveToNext()) {
+                if (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)) != null) {
+                    contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
+                    val a =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
+                    val b =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                    val c =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
+                    allContacts.add(Contact(b.toLong(), a, " ", " "))
                 }
-                cursor.close() // Got our data, close the cursor to save memory
-
             }
-        } else {
-            Snackbar.make(
-                view,
-                "This app can't display your contact records unless you...",
-                Snackbar.LENGTH_INDEFINITE
-            )
-                .setAction("Grant Access", View.OnClickListener {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(
-                            this@MainActivity,
-                            permission.READ_CONTACTS
-                        )
-                    ) {
-                        ActivityCompat.requestPermissions(
-                            this@MainActivity,
-                            arrayOf(permission.READ_CONTACTS),
-                            0
-                        )
-                    } else {
-                        // User has checked the "Don't ask again" box but keeps hitting the button
-                        val uri = Uri.fromParts(
-                            "package",
-                            this@MainActivity.packageName,
-                            null
-                        )
-                        val intent = Intent()
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).data =
-                            uri
-                        this@MainActivity.startActivity(intent)
-                    }
-                }
-                ).show()
+            cursor.close() // Got our data, close the cursor to save memory
+
         }
     }
 

@@ -1,6 +1,6 @@
 package com.example.stayconnected.sample
 
-data class Spot(
+data class Contact(
     val id: Long = counter++,
     val name: String,
     val city: String,

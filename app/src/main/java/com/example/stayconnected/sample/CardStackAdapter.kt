@@ -14,7 +14,7 @@ import com.example.stayconnected.R
 import java.util.*
 
 class CardStackAdapter(
-        private var spots: List<Spot> = emptyList()
+        private var contacts: List<Contact> = emptyList()
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +26,7 @@ class CardStackAdapter(
         val rnd = Random()
         val color: Int = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
         holder.card.setCardBackgroundColor(color)
-        val spot = spots[position]
+        val spot = contacts[position]
         holder.name.text = "${spot.name}"
         holder.city.text = spot.city
         Glide.with(holder.image)
@@ -38,15 +38,15 @@ class CardStackAdapter(
     }
 
     override fun getItemCount(): Int {
-        return spots.size
+        return contacts.size
     }
 
-    fun setSpots(spots: List<Spot>) {
-        this.spots = spots
+    fun setSpots(contacts: List<Contact>) {
+        this.contacts = contacts
     }
 
-    fun getSpots(): List<Spot> {
-        return spots
+    fun getSpots(): List<Contact> {
+        return contacts
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
