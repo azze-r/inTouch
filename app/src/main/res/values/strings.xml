@@ -11,4 +11,5 @@
     <string name="replace_first_spot">Replace first spot</string>
     <string name="swap_first_for_last">Swap first for last</string>
     <string name="saved_date_key" >date</string>
+    <string name="authorisez_la_lecture_des_contacts"> Authorisez la lecture des contacts </string>
 </resources>
