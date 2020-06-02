@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.stayconnected.R
 import com.yuyakaido.android.cardstackview.*
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,16 +42,22 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
 
-        val savedTime = sharedPref.getString("date", "").toString()
+        Realm.init(this)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val savedDate = realm.where<SavedDate>().findFirst()
+        realm.commitTransaction()
 
         val currentCal: Calendar = Calendar.getInstance()
 
-        if (savedTime.isEmpty()) {
+        if (savedDate == null) {
 
-            with(sharedPref.edit()) {
-                putString("date", currentCal.timeInMillis.toString())
-                commit()
-            }
+
+            val newSavedDate = SavedDate(currentCal.timeInMillis)
+
+            realm.beginTransaction()
+            realm.copyToRealm(newSavedDate)
+            realm.commitTransaction()
 
             Log.i("wtf", "no date saved so save new date, generate new randoms contacts")
 
@@ -80,11 +88,11 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         } else {
 
-            Log.i("wtf", "already a saved date " + savedTime.toLong())
+            Log.i("wtf", "already a saved date " + savedDate.value)
 
             val savedCal: Calendar = Calendar.getInstance()
 
-            savedCal.time = Date(savedTime.toLong())
+            savedCal.time = Date(savedDate.value)
 
             if (checkIfSameDay(currentCal, savedCal)) {
 
@@ -140,11 +148,10 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 subContacts.add(contact2)
                 subContacts.add(contact3)
 
-                with(sharedPref.edit()) {
-                    putString("date", currentCal.timeInMillis.toString())
-                    commit()
-                }
-
+                val newSavedDate = SavedDate(currentCal.timeInMillis)
+                realm.beginTransaction()
+                realm.copyToRealm(newSavedDate)
+                realm.commitTransaction()
             }
 
             adapter = CardStackAdapter(createSpots())
