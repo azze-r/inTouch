@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
                 val newSavedDate = SavedDate(currentCal.timeInMillis)
                 realm.beginTransaction()
-                realm.copyToRealm(newSavedDate)
+                realm.insertOrUpdate(newSavedDate)
                 realm.commitTransaction()
             }
 
