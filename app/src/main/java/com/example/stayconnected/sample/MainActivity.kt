@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
     var allContacts:ArrayList<Contact> =  ArrayList()
     var subContacts:ArrayList<Contact> =  ArrayList()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -174,17 +175,13 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
     }
 
-    fun checkIfSameDay(cal1:Calendar, cal2:Calendar):Boolean{
+    private fun checkIfSameDay(cal1:Calendar, cal2:Calendar):Boolean{
         return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
     }
 
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawers()
-        } else {
-            super.onBackPressed()
-        }
+        // do nothing
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
@@ -293,7 +290,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         initialize()
     }
 
-
     private fun initialize() {
         manager!!.setStackFrom(StackFrom.None)
         manager!!.setVisibleCount(3)
@@ -328,7 +324,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         return subContacts
     }
 
-    fun getContact() {
+    private fun getContact() {
 
         val projection = arrayOf(
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
@@ -363,5 +359,9 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         }
     }
+
+
+
+
 
 }
