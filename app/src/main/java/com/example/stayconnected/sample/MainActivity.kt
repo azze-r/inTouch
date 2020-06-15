@@ -71,8 +71,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 allContacts.remove(contact2)
                 val contact3 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact3)
-
-
+                
                 with(sharedPref.edit()) {
                     putString("id1", contact1.id.toString())
                     putString("id2", contact2.id.toString())
