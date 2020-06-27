@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stay Connected</string>
+    <string name="app_name">inTouch</string>
     <!-- NavigationView -->
     <string name="open_drawer">Open drawer</string>
     <string name="close_drawer">Close drawer</string>
