@@ -42,8 +42,11 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:layout_marginEnd="16dp"
             android:text="C'est tout pour aujourd'hui"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
