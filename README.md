@@ -1,4 +1,4 @@
-# Android-Keep-In-Touch
+# touchIn
 
 <p align="center"><a href="https://github.com/azze-r/Android-Keep-In-Touch"><img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/app/src/main/res/mipmap-xxxhdpi/touch.jpg" width="150"></a></p> 
 
