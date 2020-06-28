@@ -15,19 +15,11 @@
 
 ## Screenshots
 
-[<img src="meta/android/screenshots/screenshot_01.jpg" width=160>](meta/android/screenshots/screenshot_01.jpg)
-[<img src="meta/android/screenshots/screenshot_02.jpg" width=160>](meta/android/screenshots/screenshot_02.jpg)
-[<img src="meta/android/screenshots/screenshot_03.jpg" width=160>](meta/android/screenshots/screenshot_03.jpg)
-[<img src="meta/android/screenshots/screenshot_04.jpg" width=160>](meta/android/screenshots/screenshot_04.jpg)
-[<img src="meta/android/screenshots/screenshot_05.jpg" width=160>](meta/android/screenshots/screenshot_05.jpg)
-[<img src="meta/android/screenshots/screenshot_06.jpg" width=160>](meta/android/screenshots/screenshot_06.jpg)
-[<img src="meta/android/screenshots/screenshot_07.jpg" width=160>](meta/android/screenshots/screenshot_07.jpg)
-[<img src="meta/android/screenshots/screenshot_08.jpg" width=160>](meta/android/screenshots/screenshot_08.jpg)
-[<img src="meta/android/screenshots/screenshot_09.jpg" width=160>](meta/android/screenshots/screenshot_09.jpg)
-[<img src="meta/android/screenshots/screenshot_10.jpg" width=160>](meta/android/screenshots/screenshot_10.jpg)
-[<img src="meta/android/screenshots/screenshot_11.jpg" width=405>](meta/android/screenshots/screenshot_11.jpg)
-[<img src="meta/android/screenshots/screenshot_12.jpg" width=405>](meta/android/screenshots/screenshot_12.jpg)
+[<img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130640_inTouch.jpg" width=160>](https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130640_inTouch.jpg)
 
+[<img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130630_inTouch.jpg" width=160>](https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130630_inTouch.jpg)
+
+[<img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130544_inTouch.jpg" width=160>](https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130544_inTouch.jpg)
 
 ## Description
 
