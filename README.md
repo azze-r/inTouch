@@ -23,42 +23,24 @@
 
 ## Description
 
-Anime X Stream parses website data and filter required info, thus It removes the ads for seamless experience. The app doesn't require account creation to use it.
+Every day the application catch 3 randoms contacts, and you can swype right to open contact page to contact them, or you can swype left to dismiss.
 
 ### Features
 
-* Search Anime
-* Recently Added Episodes
-* Popular Animes
-* Anime Movies
-* Watch Progress
-* Add To Favourites
-* Auto Quality for Video Playback
-* Ads Free Video Placback
-* Directly skip to next/previous episode from player.
-* Dark Mode Support with system
+* Support Day Night
+* Animation card swyping
+* Read on the contact list and pick some contacts
+* Save current contact in shared preferences
+* The contact list changes everyday
 
 ### Coming Features
 
-* Different list of Popular/ Recent / Movies
-* Online syncing of Favourite list & watched progress (Will require Login)
-* … and many more
+* Customize number of contacts that you can contact everyday
 
 ### Technologies used
 * Kotlin
-* MVVM
-* Retrofit & RxJava
-* Epoxy
-* ExoPlayer
-* Android Architecture Components
-* Glide
+* Material design
+* Permission manager
 
 ## Contribution
 Your ideas, translations, design changes, code cleaning, or real heavy code changes or any help is always welcome. The more is contribution the better it gets
-
-[Pull requests](https://github.com/mukul500/AnimeXStream/pulls) will be reviewed
-
-#### Known issues and limitations
-- Last Episode Progress not showing when getting back from player.
-- Keyboard not showing sometimes for search
-- No error and loading screen for Home, Search, Favourites Fragment
