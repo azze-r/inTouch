@@ -3,14 +3,16 @@ package com.example.stayconnected.sample
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
@@ -21,6 +23,7 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity(), CardStackListener {
 
@@ -37,6 +40,14 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // In Activity's onCreate() for instance
+
+        // In Activity's onCreate() for instance
+        val w: Window = window
+        w.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         manager = CardStackLayoutManager(this, this)
 
         getContact()
