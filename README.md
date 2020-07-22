@@ -9,17 +9,6 @@
 <p align="center"></p>
 </p>
 <hr>
-<b>WARNING: THIS IS A BETA VERSION of application, THEREFORE YOU MAY ENCOUNTER BUGS. You can OPEN the ISSUE on GITHUB REPOSITORY.</b>
-
-<h3 align="center">**Star :star:  this repo to show your support and it really does matter!** :clap:</h4>
-
-## Screenshots
-
-[<img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130640_inTouch.jpg" width=160>](https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130640_inTouch.jpg)
-
-[<img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130630_inTouch.jpg" width=160>](https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130630_inTouch.jpg)
-
-[<img src="https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130544_inTouch.jpg" width=160>](https://github.com/azze-r/Android-Keep-In-Touch/blob/master/Screenshot_20200628-130544_inTouch.jpg)
 
 ## Description
 
@@ -42,5 +31,3 @@ Every day the application catch 3 randoms contacts, and you can swype right to o
 * Material design
 * Permission manager
 
-## Contribution
-Your ideas, translations, design changes, code cleaning, or real heavy code changes or any help is always welcome. The more is contribution the better it gets
