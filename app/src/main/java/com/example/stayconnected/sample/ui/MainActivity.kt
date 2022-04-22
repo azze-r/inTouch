@@ -1,27 +1,31 @@
-package com.example.stayconnected.sample
+package com.example.stayconnected.sample.ui
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.stayconnected.R
+import com.example.stayconnected.sample.modele.SavedDate
+import com.example.stayconnected.sample.util.SpotDiffCallback
+import com.example.stayconnected.sample.worker.UploadWork
+import com.example.stayconnected.sample.modele.Contact
 import com.yuyakaido.android.cardstackview.*
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -40,19 +44,23 @@ class MainActivity : AppCompatActivity(), CardStackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // In Activity's onCreate() for instance
+        val work = PeriodicWorkRequestBuilder<UploadWork>(24, TimeUnit.HOURS)
+            .setInitialDelay(24, TimeUnit.HOURS)
+            .build()
 
-        // In Activity's onCreate() for instance
-        val w: Window = window
-        w.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
+        WorkManager
+            .getInstance(this)
+            .enqueue(work)
+
         manager = CardStackLayoutManager(this, this)
 
         getContact()
 
+        populateContacts()
 
+    }
+
+    fun populateContacts(){
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
 
         Realm.init(this)
@@ -72,9 +80,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             realm.copyToRealm(newSavedDate)
             realm.commitTransaction()
 
-            Log.i("wtf", "no date saved so save new date, generate new randoms contacts")
-
-
             if (allContacts.size>=3) {
                 val contact1 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact1)
@@ -82,7 +87,7 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 allContacts.remove(contact2)
                 val contact3 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact3)
-                
+
                 with(sharedPref.edit()) {
                     putString("id1", contact1.id.toString())
                     putString("id2", contact2.id.toString())
@@ -104,21 +109,15 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         } else {
 
-            Log.i("wtf", "already a saved date " + savedDate.value)
-
             val savedCal: Calendar = Calendar.getInstance()
 
             savedCal.time = Date(savedDate.value)
 
             if (checkIfSameDay(currentCal, savedCal)) {
 
-                Log.i("wtf", "same day retrieve saved contacts")
-
                 val id1 = sharedPref.getString("id1", "").toString()
                 val id2 = sharedPref.getString("id2", "").toString()
                 val id3 = sharedPref.getString("id3", "").toString()
-
-                Log.i("wtf", "ids $id1 $id2 $id3")
 
                 if (id1 != "") {
                     for (contact in allContacts) {
@@ -143,8 +142,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
                 }
 
             } else {
-
-                Log.i("wtf", "not same day add new random contacts")
 
                 val contact1 = allContacts[(0 until allContacts.count()).random()]
                 allContacts.remove(contact1)
@@ -182,7 +179,6 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             }
 
         }
-
     }
 
     private fun checkIfSameDay(cal1:Calendar, cal2:Calendar):Boolean{
@@ -213,6 +209,10 @@ class MainActivity : AppCompatActivity(), CardStackListener {
             paginate()
         }
 
+        updateDrawer()
+    }
+
+    private fun updateDrawer() {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
 
         val arrayIds = ArrayList<String>()
@@ -338,39 +338,44 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         val projection = arrayOf(
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.Contacts.HAS_PHONE_NUMBER,
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.LOOKUP_KEY
         )
 
         val contentResolver = contentResolver
+
+
         val cursor = contentResolver.query(
             ContactsContract.Contacts.CONTENT_URI,
             projection,  // List of columns to retrieve
-            null,  // A filter of which rows to return (eg. SQL WHERE), null so get all
+            null,  // name filter of which rows to return (eg. SQL WHERE), null so get all
             null,  // Selection args, param binding
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-        ) // Sort order
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+         // Sort order
         if (cursor != null) { // No guarantee the resolver will return data, must sanity check
             val contacts: MutableList<String> =
                 ArrayList()
             while (cursor.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)) != null) {
+
+
+                if ((cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)))!= "0" && cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)) != null) {
+                    Log.i("tryhard",cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)))
+
                     contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
-                    val a =
+                    val name =
                         cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
-                    val b =
+                    val id =
                         cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
-                    val c =
-                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY))
-                    allContacts.add(Contact(b.toLong(), a, " ", " "))
+
+                    allContacts.add(Contact(id.toLong(), name, " ", " "))
+
                 }
             }
             cursor.close() // Got our data, close the cursor to save memory
 
         }
     }
-
-
 
 
 

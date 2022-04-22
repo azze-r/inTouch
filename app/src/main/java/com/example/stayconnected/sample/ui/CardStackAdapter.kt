@@ -1,4 +1,4 @@
-package com.example.stayconnected.sample
+package com.example.stayconnected.sample.ui
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.stayconnected.R
+import com.example.stayconnected.sample.modele.Contact
 import java.util.*
 
 class CardStackAdapter(

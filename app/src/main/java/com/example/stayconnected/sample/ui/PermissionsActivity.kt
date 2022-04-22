@@ -1,4 +1,4 @@
-package com.example.stayconnected.sample
+package com.example.stayconnected.sample.ui
 
 import android.Manifest
 import android.content.Intent
@@ -9,20 +9,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.stayconnected.R
 import com.example.stayconnected.sample.util.checkSelfPermissionCompat
 import com.example.stayconnected.sample.util.requestPermissionsCompat
 import com.example.stayconnected.sample.util.shouldShowRequestPermissionRationaleCompat
 import com.example.stayconnected.sample.util.showSnackbar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_auth.*
 
 const val PERMISSION_REQUEST_CAMERA = 0
 
-class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResultCallback {
+class PermissionsActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResultCallback {
 
     private lateinit var layout: View
 
@@ -30,12 +27,7 @@ class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResu
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         layout = findViewById(R.id.main_layout)
-        showCameraPreview()
-        button.visibility = View.GONE
-        button.setOnClickListener {
-            showCameraPreview()
-            button.visibility = View.GONE
-        }
+        checkPermission()
 
     }
 
@@ -44,6 +36,7 @@ class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResu
         permissions: Array<String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CAMERA) {
             // Request for camera permission.
             if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -51,8 +44,6 @@ class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResu
                 startCamera()
             } else {
                 // Permission request was denied.
-                button.visibility = View.VISIBLE
-
                 Log.i("wtf", "permission not granted")
                 val parentLayout =
                     findViewById<View>(android.R.id.content)
@@ -92,7 +83,7 @@ class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResu
         }
     }
 
-    private fun showCameraPreview() {
+    private fun checkPermission() {
         // Check if the Camera permission has been granted
         if (checkSelfPermissionCompat(Manifest.permission.READ_CONTACTS) ==
             PackageManager.PERMISSION_GRANTED) {
@@ -101,11 +92,13 @@ class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResu
             startCamera()
         } else {
             // Permission is missing and must be requested.
-            requestCameraPermission()
+            reQuestPermission()
         }
     }
 
-    private fun requestCameraPermission() {
+    private fun reQuestPermission() {
+
+
         // Permission has not been granted and must be requested.
         if (shouldShowRequestPermissionRationaleCompat(Manifest.permission.READ_CONTACTS)) {
             // Provide an additional rationale to the user if the permission was not granted
@@ -114,7 +107,8 @@ class AuthActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissionsResu
             layout.showSnackbar("access_required",
                 Snackbar.LENGTH_INDEFINITE, "ok") {
                 requestPermissionsCompat(arrayOf(Manifest.permission.READ_CONTACTS),
-                    PERMISSION_REQUEST_CAMERA)
+                    PERMISSION_REQUEST_CAMERA
+                )
             }
 
         } else {

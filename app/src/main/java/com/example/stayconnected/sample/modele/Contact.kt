@@ -1,4 +1,4 @@
-package com.example.stayconnected.sample
+package com.example.stayconnected.sample.modele
 
 data class Contact(
     val id: Long = counter++,

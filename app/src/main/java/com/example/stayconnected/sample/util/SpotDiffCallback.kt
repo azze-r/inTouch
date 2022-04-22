@@ -1,6 +1,7 @@
-package com.example.stayconnected.sample
+package com.example.stayconnected.sample.util
 
 import androidx.recyclerview.widget.DiffUtil
+import com.example.stayconnected.sample.modele.Contact
 
 class SpotDiffCallback(
     private val old: List<Contact>,

@@ -12,13 +12,14 @@
 
         android:theme="@style/AppTheme">
 
-        <activity android:name=".sample.AuthActivity">
+        <activity android:name=".sample.ui.PermissionsActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".sample.MainActivity">
+        <activity android:name=".sample.ui.MainActivity">
         </activity>
     </application>
 

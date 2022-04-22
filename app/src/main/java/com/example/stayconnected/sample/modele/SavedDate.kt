@@ -1,4 +1,4 @@
-package com.example.stayconnected.sample
+package com.example.stayconnected.sample.modele
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
