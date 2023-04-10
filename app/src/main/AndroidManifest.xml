@@ -6,10 +6,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/touch"
+        android:icon="@drawable/logo_fam"
         android:label="@string/app_name"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
 
         <activity android:name=".sample.ui.PermissionsActivity"

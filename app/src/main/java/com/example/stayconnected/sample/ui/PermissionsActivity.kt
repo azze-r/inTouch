@@ -119,6 +119,7 @@ class PermissionsActivity : AppCompatActivity(),ActivityCompat.OnRequestPermissi
     }
 
     private fun startCamera() {
+        finishAndRemoveTask()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }

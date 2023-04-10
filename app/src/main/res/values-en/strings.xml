@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">inTouch</string>
+    <string name="authorisez_la_lecture_des_contacts">We need the permission tou read your contacts</string>
+    <string name="textEnd">See you tomorrow !</string>
+</resources>

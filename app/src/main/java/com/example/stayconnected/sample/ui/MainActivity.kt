@@ -10,6 +10,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
@@ -58,9 +59,13 @@ class MainActivity : AppCompatActivity(), CardStackListener {
 
         populateContacts()
 
+        endView.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
-    fun populateContacts(){
+
+    private fun populateContacts(){
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
 
         Realm.init(this)
@@ -187,7 +192,8 @@ class MainActivity : AppCompatActivity(), CardStackListener {
     }
 
     override fun onBackPressed() {
-        // do nothing
+        if (endView.isVisible)
+            onBackPressedDispatcher.onBackPressed()
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {

@@ -2,5 +2,5 @@
     <string name="app_name">inTouch</string>
     <!-- NavigationView -->
     <string name="authorisez_la_lecture_des_contacts"> Authorisez la lecture des contacts </string>
-    <string name="textEnd">C\'est tout pour aujourd\'hui</string>
+    <string name="textEnd">A Demain !</string>
 </resources>
